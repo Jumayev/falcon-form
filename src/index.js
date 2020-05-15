@@ -1,9 +1,11 @@
 import { useState } from 'react'
 
-const falconForm = (initValues, successCallback, fieldValidators) => {
+const useForm = (initValues, successCallback, fieldValidators) => {
   const [values, setValues] = useState({ ...initValues })
 
   const [dirtyInit, setDirtyInit] = useState({ ...initValues })
+  const [validState, setValidState] = useState(false)
+
 
   if (
     dirtyInit !== true &&
@@ -14,7 +16,7 @@ const falconForm = (initValues, successCallback, fieldValidators) => {
   }
 
   const [errors, setErrors] = useState({})
-  const [, setIsSubmitting] = useState(false)
+  const [ , setIsSubmitting] = useState(false)
 
   const validate = fieldValues => {
     let newErrors = {}
@@ -44,9 +46,10 @@ const falconForm = (initValues, successCallback, fieldValidators) => {
     return { ...oldErrors, ...newErrors }
   }
 
-  const formSubmit = event => {
-    event.preventDefault()
+  const formSubmit =  e => {
+    e.preventDefault()
     let anyErrors = validate(values)
+    setValidState(true)
     if (Object.keys(anyErrors).length === 0) {
       setIsSubmitting(true)
       successCallback(values)
@@ -56,25 +59,27 @@ const falconForm = (initValues, successCallback, fieldValidators) => {
     }
   }
 
-  const fieldChange = event => {
-    event.preventDefault()
-    let { name, value } = event.target
+  const fieldChange = ({target}) => {
+    let { name, value } = target
     setValues(values => ({
       ...values,
       [name]: value
     }))
-    setErrors(validate({ [name]: value }))
+    if (validState) setErrors(validate({ [name]: value }))
   }
+
+  const resetForm = () => setValues({...initValues})
 
   return {
     fieldChange,
     formSubmit,
+    resetForm,
     values,
     errors
   }
 }
 
-export default falconForm
+export default useForm
 
 const emailRegex = /\S+@\S+\.\S+/
 
