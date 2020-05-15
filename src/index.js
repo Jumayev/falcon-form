@@ -68,12 +68,12 @@ const useForm = (initValues, successCallback, fieldValidators) => {
     if (validState) setErrors(validate({ [name]: value }))
   }
 
-  const resetForm = () => setValues({...initValues})
+  const formReset = () => setValues({...initValues})
 
   return {
     fieldChange,
     formSubmit,
-    resetForm,
+    formReset,
     values,
     errors
   }
