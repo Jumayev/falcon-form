@@ -4,7 +4,7 @@ const useForm = (initValues, successCallback, fieldValidators) => {
   const [values, setValues] = useState({ ...initValues })
 
   const [dirtyInit, setDirtyInit] = useState({ ...initValues })
-  const [validState, setValidState] = useState(false)
+  const [validate, setValidate] = useState(false)
 
 
   if (
@@ -49,7 +49,7 @@ const useForm = (initValues, successCallback, fieldValidators) => {
   const formSubmit =  e => {
     e.preventDefault()
     let anyErrors = validate(values)
-    setValidState(true)
+    setValidate(true)
     if (Object.keys(anyErrors).length === 0) {
       setIsSubmitting(true)
       successCallback(values)
@@ -65,7 +65,7 @@ const useForm = (initValues, successCallback, fieldValidators) => {
       ...values,
       [name]: value
     }))
-    if (validState) setErrors(validate({ [name]: value }))
+    if (validate) setErrors(validate({ [name]: value }))
   }
 
   const formReset = () => setValues({...initValues})
